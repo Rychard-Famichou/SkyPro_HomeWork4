@@ -1,9 +1,16 @@
 from django.contrib import admin
 
-from .models import ContactMessage, Category, Product
+from .models import ContactMessage, Category, Product, Contact
 
 
 # Register your models here.
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = ('id', 'phone', 'email', 'address',)
+    search_fields = ('phone',)
+    list_filter = ('address',)
+
+
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
     # Какие поля отображать в списке всех сообщений

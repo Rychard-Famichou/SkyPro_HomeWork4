@@ -1,6 +1,14 @@
 from django.db import models
 
 # Create your models here.
+class Contact(models.Model):
+    phone = models.CharField(max_length=20, verbose_name="Телефон, факс")
+    email = models.EmailField(max_length=50, verbose_name="Электронная почта")
+    address = models.TextField(verbose_name="Физический адрес для встреч и почты")
+
+    class Meta:
+        verbose_name = 'Контакт'
+        verbose_name_plural = 'Контакты'
 
 
 class ContactMessage(models.Model):
@@ -11,6 +19,10 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return f"Сообщение от {self.name} ({self.created_at.strftime('%d.%m.%Y %H:%M')})"
+
+    class Meta:
+        verbose_name = 'Фидбэк'
+        verbose_name_plural = 'Фидбэки'
 
 
 class Category(models.Model):
