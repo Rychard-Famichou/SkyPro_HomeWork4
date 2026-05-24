@@ -1,0 +1,26 @@
+[
+{
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {
+        "name": "Компьютеры",
+        "description": "ПК для работы или игр."
+    }
+},
+{
+    "model": "catalog.category",
+    "pk": 2,
+    "fields": {
+        "name": "Планшеты",
+        "description": "Удобное устройство для просмотра фильмов."
+    }
+},
+{
+    "model": "catalog.category",
+    "pk": 3,
+    "fields": {
+        "name": "Смартфоны",
+        "description": "Надёжный помощник 21 века."
+    }
+}
+]
