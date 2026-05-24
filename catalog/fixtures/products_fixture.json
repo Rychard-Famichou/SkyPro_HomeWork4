@@ -92,7 +92,7 @@
 },
 {
     "model": "catalog.product",
-    "pk": 10,
+    "pk": 9,
     "fields": {
         "name": "IPhone",
         "description": "Компания Apple гарантирует!",
