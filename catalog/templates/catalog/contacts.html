@@ -26,16 +26,16 @@
                 <div class="card-body">
                     <table class="table table-striped">
                         <tr>
-                            <td class="w-25">Страна</td>
-                            <td>USA</td>
+                            <td class="w-25">Телефон</td>
+                            <td>{{ contact.phone|default:"Телефон не указан" }}</td>
                         </tr>
                         <tr>
-                            <td class="w-25">ИНН</td>
-                            <td>91-1144442</td>
+                            <td class="w-25">Email</td>
+                            <td>{{ contact.email|default:"Email не указан" }}</td>
                         </tr>
                         <tr>
                             <td class="w-25">Адрес</td>
-                            <td>Redmond,WA,98052-6399</td>
+                            <td>{{ contact.address|default:"Адрес не указан" }}</td>
                         </tr>
                     </table>
                 </div>
