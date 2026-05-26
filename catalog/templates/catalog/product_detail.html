@@ -3,10 +3,30 @@
 {% block title %}Продукт{% endblock %}
 
 {% block content %}
+{% include 'header.html' with header_title="Детали продукта" %}
 <div class="container mt-5">
-    <h1>{{ product.name }}</h1>
-    <p>Категория: {{ product.category.name }}.</p>
-    <p>Описание: {{ product.description }}</p>
-    <p>Цена: {{ product.price }}</p>
+    <div class="row align-items-center">
+        <div class="col-md-6 p-3 border-0">
+            <h1 class="mb-4">{{ product.name }}</h1>
+            <p><strong>Категория:</strong> {{ product.category.name }}</p>
+            <p><strong>Описание:</strong> {{ product.description }}</p>
+            <h3 class="text-primary mb-4">Цена: {{ product.price }} руб.</h3>
+
+            <div class="d-grid gap-2 col-8">
+                <a class="btn btn-primary lg" href="#">В корзину</a>
+                <a class="btn btn-outline-secondary" href="/catalog/home/">Назад в каталог</a>
+            </div>
+        </div>
+        <div class="col-md-6 p-3 text-center border-0">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm">
+            {% else %}
+                <div class="p-5 bg-light text-muted rounded">
+                    <p class="mb-0">Изображение отсутствует</p>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
 </div>
 {% endblock %}

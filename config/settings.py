@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'crispy_forms',
+    'crispy_bootstrap5',
     'catalog'
 ]
 
@@ -107,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
 # Локализация (Localization)
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-RU'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
@@ -123,3 +125,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 # Медиатека (Media)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Настройка для использования Bootstrap 5
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
