@@ -6,13 +6,16 @@ from .models import ContactMessage, Product, Contact
 
 
 # Create your views here.
+def product(request, product_id):
+    one_product = Product.objects.get(id=product_id)
+    context = {"product": one_product}
+    return render(request, "catalog/product_detail.html", context)
+
+
 def home(request):
-    latest_products = Product.objects.all().order_by("-created_at")[:5]
-    print()
-    for product in latest_products:
-        print(product)
-    print()
-    return render(request, 'catalog/home.html')
+    products = Product.objects.all()
+    context = {"products": products}
+    return render(request, 'catalog/home.html', context)
 
 
 def contacts(request):
