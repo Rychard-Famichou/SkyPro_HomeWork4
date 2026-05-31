@@ -6,7 +6,7 @@
 {% include 'header.html' with header_title="Skystore" header_lead="Skystore - это отличный вариант хранения ваших плагинов и примеров кода, который вы бы хотели продать" %}
 <div class="container">
     <div class="row text-center">
-        {% for product in page_obj %}
+        {% for product in products %}
         <div class="col-3">
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
@@ -16,7 +16,7 @@
                     <h1 class="card-title pricing-card-title">{{ product.price }}</h1>
                     <p>{{ product.description|truncatechars:30 }}</p>
                     <a type="button" class="btn btn-lg btn-block btn-outline-primary"
-                       href="/catalog/product_detail/{{ product.id }}">Подробнее</a>
+                       href="{% url 'catalog:product_detail' product.pk %}">Подробнее</a>
                 </div>
             </div>
         </div>

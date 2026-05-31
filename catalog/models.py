@@ -1,5 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.urls import reverse
+
 
 # Create your models here.
 class Contact(models.Model):
@@ -49,6 +51,10 @@ class Product(models.Model):
 
     def __str__(self):
         return f"Продукт {self.name} из категории {self.category.name}. Цена {self.price}."
+
+    def get_absolute_url(self):
+        # Автоматически отправляет на страницу деталей созданного/измененного товара
+        return reverse('catalog:product_detail', kwargs={'pk': self.pk})
 
     class Meta:
         verbose_name = 'Продукт'
