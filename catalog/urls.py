@@ -8,7 +8,9 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('home/', views.home, name='home'),
-    path('contacts/', views.contacts, name='contacts')
+    path('product_form/', views.product_form, name='product_form'),
+    path('contacts/', views.contacts, name='contacts'),
+    path('product_detail/<int:product_id>/', views.product, name='product_detail'),
 ]
 
 if settings.DEBUG:

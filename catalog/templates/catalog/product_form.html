@@ -1,0 +1,20 @@
+<!-- product_form.html -->
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}<!-- 1. Загружаем теги -->
+
+{% block title %}Продукт{% endblock %}
+
+{% block content %}
+{% include 'header.html' with header_title="Добавить продукт в существующую категорию" header_lead="Не нашли подходящую категорию? Отправьте запрос на странице контакты" %}
+<div class="container" style="max-width: 500px;">
+    <form method="post" novalidate> <!-- novalidate отключает стандартные подсказки браузера -->
+        {% csrf_token %}
+
+        <!-- 2. Просто выводим форму через фильтр crispy -->
+        {{ form|crispy }}
+
+        <button type="submit" class="btn btn-primary mt-3">Добавить</button>
+    </form>
+</div>
+{% endblock %}
