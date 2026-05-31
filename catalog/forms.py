@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Product
+from .models import Product, ContactMessage
 
 
 class ProductForm(forms.ModelForm):
@@ -13,3 +13,10 @@ class ProductForm(forms.ModelForm):
                 'unique': "Продукт с таким названием уже существует в каталоге.",
             }
         }
+
+
+class ContactMessageForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ['name', 'phone', 'message']
+        error_messages = {}
