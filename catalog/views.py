@@ -13,7 +13,7 @@ class ProductMixin:
 
 class ProductFormMixin(ProductMixin, SuccessMessageMixin):
     form_class = ProductForm
-    template_name = 'product_form.html'
+    template_name = 'catalog/product_form.html'
 
 
 class ProductCreateView(ProductFormMixin, CreateView):
@@ -25,17 +25,17 @@ class ProductUpdateView(ProductFormMixin, UpdateView):
 
 
 class ProductDetailView(ProductMixin, DetailView):
-    template_name = 'product_detail.html'
+    template_name = 'catalog/product_detail.html'
 
 
 class ProductDeleteView(ProductMixin, SuccessMessageMixin, DeleteView):
-    template_name = 'product_delete.html'
+    template_name = 'catalog/product_delete.html'
     success_url = reverse_lazy('catalog:home')
     success_message = "Товар был успешно удален из каталога."
 
 
 class ProductListView(ProductMixin, ListView):
-    template_name = 'home.html'
+    template_name = 'catalog/home.html'
     context_object_name = 'products'
     paginate_by = 8
 
@@ -46,7 +46,7 @@ class ProductListView(ProductMixin, ListView):
 class ContactMessageCreateView(SuccessMessageMixin, CreateView):
     model = ContactMessage
     form_class = ContactMessageForm
-    template_name = 'contacts.html'
+    template_name = 'catalog/contacts.html'
     context_object_name = 'contact_message'
     success_url = reverse_lazy('catalog:home')
     success_message = f"Спасибо, «%(name)s»! Ваше сообщение сохранено в базу данных."

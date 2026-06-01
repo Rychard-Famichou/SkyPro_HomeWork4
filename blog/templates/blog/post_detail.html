@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Продукт{% endblock %}
+
+{% block content %}
+{% include 'header.html' with header_title="Детали поста" %}
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-6 p-3 border-0">
+            <h1 class="mb-4">{{ post.title }}</h1>
+            <p><strong>Содержимое:</strong> {{ post.content|truncatechars:50 }}</p>
+
+            <!-- Кнопка для раскрытия -->
+            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseContent">
+                Развернуть полностью
+            </button>
+
+            <!-- Скрытый блок с полным текстом -->
+            <div class="collapse mt-2" id="collapseContent">
+                <div class="card card-body">
+                    {{ post.content }}
+                </div>
+            </div>
+            <p><strong>Публикация:</strong> {{ post.is_published }}</p>
+            <p><strong>Просмотры:</strong> {{ post.views }}</p>
+            <div class="d-grid gap-2 col-8">
+                <a class="btn btn-primary" href="{% url 'blog:post_list' %}">Назад</a>
+                <a class="btn btn-outline-warning" href="{% url 'blog:post_update' post.pk %}">Редактирование</a>
+                <a class="btn btn-outline-danger" href="{% url 'blog:post_delete' post.pk %}">Удаление</a>
+            </div>
+        </div>
+        <div class="col-md-6 p-3 text-center border-0">
+            {% if post.image %}
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" class="img-fluid rounded shadow-sm">
+            {% else %}
+            <div class="p-5 bg-light text-muted rounded">
+                <p class="mb-0">Изображение отсутствует</p>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

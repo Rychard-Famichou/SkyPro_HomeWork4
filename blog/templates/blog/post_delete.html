@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}<!-- 1. Загружаем теги -->
+
+{% block title %}Пост{% endblock %}
+
+{% block content %}
+{% include 'header.html' with header_title="Удалить пост" header_lead="Вы должны подтвердить удаление поста" %}
+<div class="container" style="max-width: 500px;">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger mt-3">Удалить</button>
+    </form>
+</div>
+{% endblock %}

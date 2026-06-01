@@ -53,6 +53,7 @@ class Command(BaseCommand):
         try:
             call_command("loaddata", "categories_fixture.json")
             call_command("loaddata", "products_fixture.json")
+            call_command("loaddata", "posts_fixture.json")
             self.stdout.write(self.style.SUCCESS(" Фикстуры успешно загружены."))
         except Exception as e:
             self.stderr.write(self.style.WARNING(f" Не удалось загрузить фикстуры: {e}"))
