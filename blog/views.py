@@ -33,6 +33,7 @@ class PostCreateView(PostFormMixin, CreateView):
 
 
 class PostUpdateView(PostFormMixin, UpdateView):
+    success_url = reverse_lazy('blog:post_detail')
     success_message = "Пост «%(title)s» успешно обновлён."
 
 
