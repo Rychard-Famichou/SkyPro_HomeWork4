@@ -4,16 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}Sky Odds & Ends{% endblock %}</title>
+    <title>{% block title %}SkyPro Odds & Ends{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 </head>
 <body>
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
-    <h5 class="my-0 mr-md-auto font-weight-normal">Sky Odds & Ends</h5>
+    <h5 class="my-0 mr-md-auto font-weight-normal">SkyPro Odds & Ends</h5>
     <nav class="ms-5">
         <a class="p-2 btn btn-outline-primary" href="/catalog/home/">Каталог</a>
         <a class="p-2 btn btn-outline-primary" href="/blog/post_list/">Блог</a>
         <a class="p-2 btn btn-outline-primary" href="/catalog/contacts/">Контакты</a>
+        <a class="p-2 btn btn-outline-primary" href="/users/register/">Регистрация</a>
     </nav>
 </div>
 {% if messages %}

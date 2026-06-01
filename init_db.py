@@ -8,7 +8,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 # Читаем параметры из окружения (синхронизировано с settings.py)
-target_db = os.getenv('DATABASE_NAME', 'catalog')
+target_db = os.getenv('DATABASE_NAME', 'skyprodb')
 db_user = os.getenv('DATABASE_USER')
 db_password = os.getenv('DATABASE_PASSWORD')
 db_host = os.getenv('DATABASE_HOST', 'localhost')

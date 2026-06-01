@@ -13,8 +13,6 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-import blog
-
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -44,7 +42,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     'catalog',
-    'blog'
+    'blog',
+    'users',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -132,3 +132,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Настройка для использования Bootstrap 5
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+# Настройки SMTP для отправки писем через Gmail
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = '://gmail.com'
+# EMAIL_PORT = 465
+# EMAIL_USE_TLS = False
+# EMAIL_USE_SSL = True
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Логин и созданный пароль приложения
+EMAIL_HOST_USER = 'rychard.famichou@gmail.com'
+EMAIL_HOST_PASSWORD = 'oapg szrr mfki jxty'

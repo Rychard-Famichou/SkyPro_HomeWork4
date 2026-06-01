@@ -1,0 +1,52 @@
+[
+{
+    "model": "users.customuser",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$DpuPPzDcFjvIEVFH9yV8z9$lt/xaqCS26MOJZ6pQMEMODy1ix56RqUvGpa7IBH5mJA=",
+        "last_login": "2026-06-01T08:26:39.248Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-06-01T08:26:13.584Z",
+        "bio": "",
+        "birth_date": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.customuser",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$1200000$5nV0vaErYlncJepgIH5aBD$9eiXe9G9U7+K68eQbX5hRais34axgelIhblmfkkyHGM=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "Bloger",
+        "first_name": "Rychard",
+        "last_name": "Famichou",
+        "email": "rychard.famichou@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-06-01T08:35:49Z",
+        "bio": "Веду блог.",
+        "birth_date": "2026-06-01",
+        "groups": [],
+        "user_permissions": [
+            37,
+            38,
+            39,
+            40,
+            25,
+            33,
+            34,
+            35,
+            36
+        ]
+    }
+}
+]

@@ -7,7 +7,7 @@
 {% block content %}
 {% include 'header.html' with header_title="Добавить новый пост" header_lead="Вы можете создать черновик поста!" %}
 <div class="container" style="max-width: 500px;">
-    <form method="post" novalidate>
+    <form method="post" enctype="multipart/form-data" novalidate>
         {% csrf_token %}
 
         {{ form|crispy }}

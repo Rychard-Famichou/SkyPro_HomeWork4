@@ -53,6 +53,7 @@ class Command(BaseCommand):
         try:
             call_command("loaddata", "categories_fixture.json")
             call_command("loaddata", "products_fixture.json")
+            call_command('loaddata', 'users_fixture.json')
             call_command("loaddata", "posts_fixture.json")
             self.stdout.write(self.style.SUCCESS(" Фикстуры успешно загружены."))
         except Exception as e:
@@ -65,13 +66,13 @@ class Command(BaseCommand):
         except Exception as e:
             self.stderr.write(
                 self.style.WARNING(
-                    f" Пропущено: {e}\n(Для автосоздания добавьте DJANGO_SUPERUSER_ в .env)"
+                    f" Пропущено: {e}\n(Для авто-создания добавьте DJANGO_SUPERUSER_ в .env)"
                 )
             )
         self.stdout.write("-" * 40)
 
         self.stdout.write(
             self.style.SUCCESS(
-                "\n All done! Настройка успешно завершена. Запустите: python manage.py runserver"
+                "\n All done! Настройки успешно загружены. Завершите процесс и выполните: python manage.py runserver"
             )
         )
