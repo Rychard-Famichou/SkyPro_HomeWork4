@@ -1,84 +1,52 @@
-from django.core.paginator import Paginator
-from django.shortcuts import render, redirect
-from django.contrib import messages
-
-from .forms import ProductForm
-from .models import ContactMessage, Product, Contact, Category
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, DeleteView, UpdateView, ListView
+from django.contrib.messages.views import SuccessMessageMixin
+from .forms import ProductForm, ContactMessageForm
+from .models import ContactMessage, Product
 
 
 # Create your views here.
-# def product_form(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         description = request.POST.get('description')
-#         price = float(request.POST.get('price'))
-#         category_id = request.POST.get('category')
-#         category_instance = Category.objects.get(id=category_id)
-#         Product.objects.create(
-#             name=name,
-#             description=description,
-#             price=price,
-#             category=category_instance
-#         )
-#         messages.success(request, f"Спасибо! Ваш продукт сохранен в базу данных.")
-#         return redirect(request.path)
-#     categories = Category.objects.all()
-#     context = {"categories": categories}
-#     return render(request, 'product_form.html', context=context)
-def product_form(request):
-    if request.method == 'POST':
-        form = ProductForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Спасибо! Ваш продукт сохранен в базу данных.")
-            return redirect(request.path)
-    else:
-        form = ProductForm()
-
-    categories = Category.objects.all()
-
-    context = {
-        "categories": categories,
-        "form": form
-    }
-    return render(request, 'product_form.html', context=context)
+class ProductMixin:
+    model = Product
+    context_object_name = 'product'
 
 
-def product(request, product_id):
-    one_product = Product.objects.get(id=product_id)
-    context = {"product": one_product}
-    return render(request, "catalog/product_detail.html", context=context)
+class ProductFormMixin(ProductMixin, SuccessMessageMixin):
+    form_class = ProductForm
+    template_name = 'catalog/product_form.html'
 
 
-def home(request):
-    products = Product.objects.all()
-    paginator = Paginator(products, 8)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {"page_obj": page_obj}
-    return render(request, 'catalog/home.html', context=context)
+class ProductCreateView(ProductFormMixin, CreateView):
+    success_message = "Товар «%(name)s» успешно добавлен в каталог!"
 
 
-def contacts(request):
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
+class ProductUpdateView(ProductFormMixin, UpdateView):
+    success_message = "Данные товара «%(name)s» успешно обновлены."
 
-        # Сохраняем данные в PostgreSQL одной строчкой!
-        ContactMessage.objects.create(
-            name=name,
-            phone=phone,
-            message=message
-        )
 
-        messages.success(request, f"Спасибо, {name}! Ваше сообщение сохранено в базу данных.")
-        return redirect(request.path)
+class ProductDetailView(ProductMixin, DetailView):
+    template_name = 'catalog/product_detail.html'
 
-    # Получаем первую (и обычно единственную) запись с контактными данными из админки
-    contact_data = Contact.objects.first()
 
-    # Передаем её в шаблон под ключом 'contact'
-    context = {"contact": contact_data}
+class ProductDeleteView(ProductMixin, SuccessMessageMixin, DeleteView):
+    template_name = 'catalog/product_delete.html'
+    success_url = reverse_lazy('catalog:home')
+    success_message = "Товар был успешно удален из каталога."
 
-    return render(request, "catalog/contacts.html", context)
+
+class ProductListView(ProductMixin, ListView):
+    template_name = 'catalog/home.html'
+    context_object_name = 'products'
+    paginate_by = 8
+
+    def get_queryset(self):
+        return Product.objects.all().order_by('-id')
+
+
+class ContactMessageCreateView(SuccessMessageMixin, CreateView):
+    model = ContactMessage
+    form_class = ContactMessageForm
+    template_name = 'catalog/contacts.html'
+    context_object_name = 'contact_message'
+    success_url = reverse_lazy('catalog:home')
+    success_message = f"Спасибо, «%(name)s»! Ваше сообщение сохранено в базу данных."

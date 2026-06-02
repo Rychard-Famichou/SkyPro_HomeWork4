@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}Пост{% endblock %}
+
+{% block content %}
+{% include 'header.html' with header_title="Добавить новый пост" header_lead="Вы можете создать черновик поста!" %}
+<div class="container" style="max-width: 500px;">
+    <form method="post" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+
+        {{ form|crispy }}
+
+        <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

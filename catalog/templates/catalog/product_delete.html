@@ -1,0 +1,16 @@
+<!-- product_form.html -->
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}<!-- 1. Загружаем теги -->
+
+{% block title %}Продукт{% endblock %}
+
+{% block content %}
+{% include 'header.html' with header_title="Удалить продукт" header_lead="Вы должны подтвердить удаление продукта" %}
+<div class="container" style="max-width: 500px;">
+    <form method="post" novalidate> <!-- novalidate отключает стандартные подсказки браузера -->
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger mt-3">Удалить</button>
+    </form>
+</div>
+{% endblock %}
