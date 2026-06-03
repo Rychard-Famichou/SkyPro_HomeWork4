@@ -8,11 +8,11 @@
 {% block content %}
 {% include 'header.html' with header_title="Добавить продукт в существующую категорию" header_lead="Не нашли подходящую категорию? Отправьте запрос на странице контакты" %}
 <div class="container" style="max-width: 500px;">
-    <form method="post" novalidate> <!-- novalidate отключает стандартные подсказки браузера -->
+    <form method="post" novalidate enctype="multipart/form-data"> <!-- novalidate отключает стандартные подсказки браузера -->
         {% csrf_token %}
 
-        <!-- 2. Просто выводим форму через фильтр crispy -->
-        {{ form|crispy }}
+        {{ form.non_field_errors }} <!-- Ошибки, которые не связаны с конкретными полями формы -->
+        {{ form.as_p }} <!-- Рендеринг всех полей формы и связанных с ними ошибок -->
 
         <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
     </form>
