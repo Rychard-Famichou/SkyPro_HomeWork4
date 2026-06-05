@@ -8,13 +8,14 @@
     <div class="row align-items-center">
         <div class="col-md-6 p-3 border-0">
             <h1 class="mb-4">{{ product.name }}</h1>
+            <p><strong>Пользователь:</strong> {{ product.user.username }}</p>
             <p><strong>Категория:</strong> {{ product.category.name }}</p>
             <p><strong>Описание:</strong> {{ product.description }}</p>
             <h3 class="text-primary mb-4">Цена: {{ product.price }} руб.</h3>
 
             <div class="d-grid gap-2 col-8">
                 <a class="btn btn-primary lg" href="#">В корзину</a>
-                <a class="btn btn-outline-secondary" href="{% url 'catalog:home' %}">Назад в каталог</a>
+                <a class="btn btn-outline-secondary" href="{% url 'catalog:product_list' %}">Назад в каталог</a>
                 <a class="btn btn-outline-warning" href="{% url 'catalog:product_update' product.pk %}">Редактирование</a>
                 <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">Удаление</a>
             </div>

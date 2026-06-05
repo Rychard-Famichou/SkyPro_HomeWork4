@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -28,16 +29,16 @@ class PostListView(PostMixin, ListView):
         return Post.objects.filter(is_published=True).order_by('-id')
 
 
-class PostCreateView(PostFormMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, PostFormMixin, CreateView):
     success_message = "Пост «%(title)s» успешно добавлен."
 
 
-class PostUpdateView(PostFormMixin, UpdateView):
+class PostUpdateView(LoginRequiredMixin, PostFormMixin, UpdateView):
     success_url = reverse_lazy('blog:post_detail')
     success_message = "Пост «%(title)s» успешно обновлён."
 
 
-class PostDetailView(PostMixin, DetailView):
+class PostDetailView(LoginRequiredMixin, PostMixin, DetailView):
     template_name = 'blog/post_detail.html'
 
     queryset = Post.objects.select_related('user')
@@ -67,7 +68,7 @@ class PostDetailView(PostMixin, DetailView):
         return obj
 
 
-class PostDeleteView(PostMixin, SuccessMessageMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, PostMixin, SuccessMessageMixin, DeleteView):
     template_name = 'blog/post_delete.html'
     success_url = reverse_lazy('blog:post_list')
     success_message = "Пост «%(title)s» был успешно удален."

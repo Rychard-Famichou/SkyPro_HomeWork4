@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+{% include 'header.html' with header_title="SkyPro Odds & Ends" header_lead="Бесконечность не предел." %}
+<div class="container ">
+    <div class="row">
+        <div class="col-6 text-center d-flex flex-column justify-content-between">
+            <div>
+                {% if user.is_authenticated %}
+                    {% if user.username %}
+                    <p>Добро пожаловать, {{ user.username }}!</p>
+                    {% else %}
+                    <p>Добро пожаловать, Пользователь!</p>
+                    {% endif %}
+                    <div>
+                        <a class="btn btn-primary" href="{% url 'users:user_detail' user.pk %}">Детали аккаунта</a>
+                    </div>
+                {% else %}
+                    <p>Хотите зайти на сервис?</p>
+                    <p>У вас будет больше возможностей.</p>
+                {% endif %}
+            </div>
+            {% if not user.is_authenticated %}
+            <div>
+                <a class="btn btn-primary mt-3" href="/users/login/">Вход</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-6 text-center d-flex flex-column justify-content-between">
+            <div>
+                {% if user.is_authenticated %}
+                <!-- Секция последнего продукта -->
+                {% if latest_product %}
+                <h3>Новинка каталога: {{ latest_product.name }}</h3>
+                <p>Цена: {{ latest_product.price }} руб.</p>
+                <a href="{% url 'catalog:product_detail' latest_product.pk %}">Смотреть</a>
+                {% else %}
+                <p>Продуктов пока нет.</p>
+                {% endif %}
+                <!-- Секция последнего поста -->
+                {% if latest_post %}
+                <h3>Последняя запись в блоге: {{ latest_post.title }}</h3>
+                <p>{{ latest_post.content|truncatewords:20 }}</p>
+                <a href="{% url 'blog:post_detail' latest_post.pk %}">Читать далее</a>
+                {% else %}
+                <p>Постов пока нет.</p>
+                {% endif %}
+                {% else %}
+                <p>Хотите зарегистрироваться?</p>
+                <p>У вас будет больше возможностей.</p>
+                {% endif %}
+            </div>
+            {% if not user.is_authenticated %}
+            <div>
+                <a class="btn btn-primary mt-3" href="/users/register/">Регистрация</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

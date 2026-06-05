@@ -2,6 +2,8 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 
+from users.models import CustomUser
+
 
 # Create your models here.
 class Contact(models.Model):
@@ -44,6 +46,7 @@ class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name="Название продукта", unique=True)
     description = models.TextField(verbose_name="Описание продукта")
     image = models.ImageField(upload_to='photos/', verbose_name='Фотография продукта', blank=True, null=True)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='Пользователь')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория продукта')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена продукта')
     created_at = models.DateTimeField(auto_now_add=True)

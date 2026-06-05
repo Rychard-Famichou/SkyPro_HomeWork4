@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Пользователь{% endblock %}
+
+{% block content %}
+{% include 'header.html' with header_title="Детали пользователя" %}
+<div class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-6 p-3 border-0">
+            {% if user.username %}
+            <h1 class="mb-4">{{ user.username }}</h1>
+            {% elif user.fisrt_name and user.last_name %}
+            <h1 class="mb-4">{{ user }}</h1>
+            {% else %}
+            <h1 class="mb-4">Пользователь с почтой - {{ user.email }}</h1>
+            <p>Используйте редактирование, что бы задать никнейм или имя и фамилию.</p>
+            {% endif %}
+            <p><strong>Имя:</strong> {{ user.first_name }}</p>
+            <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+            <p><strong>Телефон:</strong> {{ user.phone_number }}</p>
+            <p><strong>Страна:</strong> {{ user.country }}</p>
+            <p><strong>Дата рождения:</strong> {{ user.birth_date }}</p>
+            <p><strong>О себе:</strong> {{ user.bio|truncatechars:50 }}</p>
+            <div class="d-grid gap-2 col-8">
+                <a class="btn btn-primary" href="{% url 'users:home' %}">Назад</a>
+                <a class="btn btn-outline-warning" href="{% url 'users:user_update' user.pk %}">Редактирование</a>
+                <a class="btn btn-outline-danger" href="#">Удаление</a>
+            </div>
+        </div>
+        <div class="col-md-6 p-3 text-center border-0">
+            {% if user.image %}
+            <img src="{{ user.image.url }}" alt="{{ user.email }}" class="img-fluid rounded shadow-sm">
+            {% else %}
+            <div class="p-5 bg-light text-muted rounded">
+                <p class="mb-0">Изображение отсутствует</p>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

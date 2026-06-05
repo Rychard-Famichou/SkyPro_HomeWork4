@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+{% include 'header.html' with header_title="Вход на сервис" header_lead="Введите почту и пароль" %}
+<div class="container" style="max-width: 500px;">
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary mt-3">Войти</button>
+    </form>
+</div>
+{% endblock %}

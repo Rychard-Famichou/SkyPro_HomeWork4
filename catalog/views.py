@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, DeleteView, UpdateView, ListView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -16,26 +17,26 @@ class ProductFormMixin(ProductMixin, SuccessMessageMixin):
     template_name = 'catalog/product_form.html'
 
 
-class ProductCreateView(ProductFormMixin, CreateView):
+class ProductCreateView(LoginRequiredMixin, ProductFormMixin, CreateView):
     success_message = "Товар «%(name)s» успешно добавлен в каталог!"
 
 
-class ProductUpdateView(ProductFormMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, ProductFormMixin, UpdateView):
     success_message = "Данные товара «%(name)s» успешно обновлены."
 
 
-class ProductDetailView(ProductMixin, DetailView):
+class ProductDetailView(LoginRequiredMixin, ProductMixin, DetailView):
     template_name = 'catalog/product_detail.html'
 
 
-class ProductDeleteView(ProductMixin, SuccessMessageMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, ProductMixin, SuccessMessageMixin, DeleteView):
     template_name = 'catalog/product_delete.html'
     success_url = reverse_lazy('catalog:home')
     success_message = "Товар был успешно удален из каталога."
 
 
 class ProductListView(ProductMixin, ListView):
-    template_name = 'catalog/home.html'
+    template_name = 'catalog/product_list.html'
     context_object_name = 'products'
     paginate_by = 8
 

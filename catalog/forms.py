@@ -1,12 +1,34 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import BooleanField
+
 from .models import Product, ContactMessage
 
 
 BAN_WORDS = ["казино", "крипта", "криптовалюта", "биржа", "дешево", "бесплатно", "обман", "полиция",
                      "радар"]
 
-class ProductForm(forms.ModelForm):
+
+class StyleFormMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field, in self.fields.items():
+            if isinstance(field, BooleanField):
+                field.widget.attrs['class'] = 'form-check-input'
+            else:
+                field.widget.attrs['class'] = 'form-control'
+
+            if field.label and not isinstance(field, BooleanField):
+                prefix = "Выберите" if hasattr(field.widget, 'choices') else "Введите"
+
+                label_text = field.label.lower()
+                if label_text:
+                    label_text = label_text[0].lower() + label_text[1:]
+
+                field.widget.attrs['placeholder'] = f"{prefix} {label_text}"
+                
+
+class ProductForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'category', 'price', 'description', 'image']
@@ -16,29 +38,6 @@ class ProductForm(forms.ModelForm):
             }
         }
 
-    def __init__(self, *args, **kwargs):
-        super(ProductForm, self).__init__(*args, **kwargs)
-
-        self.fields['name'].widget.attrs.update({
-            'class': 'form-control',  # Добавление CSS-класса для стилизации поля
-            'placeholder': 'Введите название продукта'  # Текст подсказки внутри поля
-        })
-        self.fields['description'].widget.attrs.update({
-            'class': 'form-control',  # Добавление CSS-класса для стилизации поля
-            'placeholder': 'Введите описание продукта'  # Текст подсказки внутри поля
-        })
-        self.fields['price'].widget.attrs.update({
-            'class': 'form-control',  # Добавление CSS-класса для стилизации поля
-            'placeholder': 'Введите цену продукта'  # Текст подсказки внутри поля
-        })
-        self.fields['category'].widget.attrs.update({
-            'class': 'form-control',  # Добавление CSS-класса для стилизации поля
-            'placeholder': 'Выберите категорию продукта'  # Текст подсказки внутри поля
-        })
-        self.fields['image'].widget.attrs.update({
-            'class': 'form-control',  # Добавление CSS-класса для стилизации поля
-            'placeholder': 'Загрузите изображение продукта'  # Текст подсказки внутри поля
-        })
 
     def clean_image(self):
         image = self.cleaned_data['image']
