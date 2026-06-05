@@ -29,16 +29,16 @@ class PostListView(PostMixin, ListView):
         return Post.objects.filter(is_published=True).order_by('-id')
 
 
-class PostCreateView(LoginRequiredMixin, PostFormMixin, CreateView):
+class PostCreateView(PostFormMixin, CreateView):
     success_message = "Пост «%(title)s» успешно добавлен."
 
 
-class PostUpdateView(LoginRequiredMixin, PostFormMixin, UpdateView):
+class PostUpdateView(PostFormMixin, UpdateView):
     success_url = reverse_lazy('blog:post_detail')
     success_message = "Пост «%(title)s» успешно обновлён."
 
 
-class PostDetailView(LoginRequiredMixin, PostMixin, DetailView):
+class PostDetailView(PostMixin, DetailView):
     template_name = 'blog/post_detail.html'
 
     queryset = Post.objects.select_related('user')
@@ -68,7 +68,7 @@ class PostDetailView(LoginRequiredMixin, PostMixin, DetailView):
         return obj
 
 
-class PostDeleteView(LoginRequiredMixin, PostMixin, SuccessMessageMixin, DeleteView):
+class PostDeleteView(PostMixin, SuccessMessageMixin, DeleteView):
     template_name = 'blog/post_delete.html'
     success_url = reverse_lazy('blog:post_list')
     success_message = "Пост «%(title)s» был успешно удален."

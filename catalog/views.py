@@ -17,19 +17,19 @@ class ProductFormMixin(ProductMixin, SuccessMessageMixin):
     template_name = 'catalog/product_form.html'
 
 
-class ProductCreateView(LoginRequiredMixin, ProductFormMixin, CreateView):
+class ProductCreateView(ProductFormMixin, CreateView):
     success_message = "Товар «%(name)s» успешно добавлен в каталог!"
 
 
-class ProductUpdateView(LoginRequiredMixin, ProductFormMixin, UpdateView):
+class ProductUpdateView(ProductFormMixin, UpdateView):
     success_message = "Данные товара «%(name)s» успешно обновлены."
 
 
-class ProductDetailView(LoginRequiredMixin, ProductMixin, DetailView):
+class ProductDetailView(ProductMixin, DetailView):
     template_name = 'catalog/product_detail.html'
 
 
-class ProductDeleteView(LoginRequiredMixin, ProductMixin, SuccessMessageMixin, DeleteView):
+class ProductDeleteView(ProductMixin, SuccessMessageMixin, DeleteView):
     template_name = 'catalog/product_delete.html'
     success_url = reverse_lazy('catalog:home')
     success_message = "Товар был успешно удален из каталога."
