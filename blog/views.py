@@ -1,6 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib import messages
+from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, ListView, DetailView, DeleteView
 from django.core.mail import send_mail
@@ -33,9 +34,17 @@ class PostCreateView(PostFormMixin, CreateView):
     success_message = "Пост «%(title)s» успешно добавлен."
 
 
-class PostUpdateView(PostFormMixin, UpdateView):
-    success_url = reverse_lazy('blog:post_detail')
+class PostUpdateView(UserPassesTestMixin, PostFormMixin, UpdateView):
     success_message = "Пост «%(title)s» успешно обновлён."
+    permission_required = 'blog.change_post'
+    login_url = 'users:home'
+
+    def test_func(self):
+        return self.request.user.has_perm('blog.change_post')
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для редактирования постов.")
+        return redirect(self.login_url)
 
 
 class PostDetailView(PostMixin, DetailView):
@@ -68,7 +77,16 @@ class PostDetailView(PostMixin, DetailView):
         return obj
 
 
-class PostDeleteView(PostMixin, SuccessMessageMixin, DeleteView):
+class PostDeleteView(UserPassesTestMixin, PostMixin, SuccessMessageMixin, DeleteView):
     template_name = 'blog/post_delete.html'
     success_url = reverse_lazy('blog:post_list')
     success_message = "Пост «%(title)s» был успешно удален."
+    permission_required = 'blog.delete_post'
+    login_url = 'users:home'
+
+    def test_func(self):
+        return self.request.user.has_perm('blog.delete_post')
+
+    def handle_no_permission(self):
+        messages.error(self.request, "У вас нет прав для удаления постов.")
+        return redirect(self.login_url)
