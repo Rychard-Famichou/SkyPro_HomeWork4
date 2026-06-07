@@ -36,8 +36,8 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['latest_product'] = Product.objects.order_by('-pk').first()
-        context['latest_post'] = Post.objects.order_by('-pk').first()
+        context['latest_product'] = Product.objects.filter(is_published=True).order_by('-pk').first()
+        context['latest_post'] = Post.objects.filter(is_published=True).order_by('-pk').first()
 
         return context
 

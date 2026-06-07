@@ -31,7 +31,7 @@ class StyleFormMixin:
 class ProductForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'category', 'price', 'description', 'image']
+        fields = ['name', 'category', 'price', 'description', 'image', 'is_published']
         error_messages = {
             'name': {
                 'unique': "Продукт с таким названием уже существует в каталоге.",

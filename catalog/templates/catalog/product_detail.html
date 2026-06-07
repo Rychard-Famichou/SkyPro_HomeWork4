@@ -8,25 +8,46 @@
     <div class="row align-items-center">
         <div class="col-md-6 p-3 border-0">
             <h1 class="mb-4">{{ product.name }}</h1>
-            <p><strong>Пользователь:</strong> {{ product.user.username }}</p>
+            {% if product.owner.username %}
+            <p><strong>Владелец:</strong> {{ product.owner.username }}</p>
+            {% elif product.owner.fisrt_name and product.owner.last_name %}
+            <p><strong>Владелец:</strong> {{ product.owner }}</p>
+            {% else %}
+            <p><strong>Владелец:</strong> Пользователь с почтой - {{ product.owner.email }}</p>
+            {% endif %}
             <p><strong>Категория:</strong> {{ product.category.name }}</p>
             <p><strong>Описание:</strong> {{ product.description }}</p>
+            {% if user == product.owner or perms.catalog.can_unpublish_product %}
+                {% load status_filters %}
+                <p><strong>Публикация:</strong> {{ product.is_published|status_badge }}</p>
+            {% endif %}
             <h3 class="text-primary mb-4">Цена: {{ product.price }} руб.</h3>
 
             <div class="d-grid gap-2 col-8">
                 <a class="btn btn-primary lg" href="#">В корзину</a>
                 <a class="btn btn-outline-secondary" href="{% url 'catalog:product_list' %}">Назад в каталог</a>
-                <a class="btn btn-outline-warning" href="{% url 'catalog:product_update' product.pk %}">Редактирование</a>
+                {% if user == product.owner %}
+                <a class="btn btn-outline-warning"
+                   href="{% url 'catalog:product_update' product.pk %}">Редактирование</a>
+                {% endif %}
+                {% if product.is_published and perms.catalog.can_unpublish_product %}
+                <form action="{% url 'catalog:product_unpublish' product.pk %}" method="post" class="d-flex m-0">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-warning w-100">Снять с публикации</button>
+                </form>
+                {% endif %}
+                {% if user == product.owner or perms.catalog.delete_product %}
                 <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">Удаление</a>
+                {% endif %}
             </div>
         </div>
         <div class="col-md-6 p-3 text-center border-0">
             {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm">
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded shadow-sm">
             {% else %}
-                <div class="p-5 bg-light text-muted rounded">
-                    <p class="mb-0">Изображение отсутствует</p>
-                </div>
+            <div class="p-5 bg-light text-muted rounded">
+                <p class="mb-0">Изображение отсутствует</p>
+            </div>
             {% endif %}
         </div>
 
