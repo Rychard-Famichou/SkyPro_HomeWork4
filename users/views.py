@@ -1,22 +1,57 @@
 from django.contrib.auth import login
-from django.shortcuts import render
+from django.contrib.auth.views import LoginView
+from django.core.mail import send_mail
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
-from .forms import CustomUserCreationForm
+from django.views.generic.edit import FormView
+from django.views.generic import TemplateView, DetailView
+
+from blog.models import Post
+from catalog.models import Product
+from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .models import CustomUser
 
 
 # Create your views here.
-class RegisterView(CreateView):
+class RegisterView(FormView):
     form_class = CustomUserCreationForm
     template_name = 'users/register.html'  # Путь к HTML-шаблону
-    success_url = reverse_lazy('catalog:home')    # Куда перенаправить после успешной регистрации
+    success_url = reverse_lazy('users:home')    # Куда перенаправить после успешной регистрации
 
     def form_valid(self, form):
-        # 1. Сохраняем нового пользователя в базу данных
         user = form.save()
-
-        # 2. Автоматически авторизуем его в текущей сессии
         login(self.request, user)
-
-        # 3. Перенаправляем на success_url
+        self.send_welcome_email(user.email)
         return super().form_valid(form)
+
+    def send_welcome_email(self, user_email):
+        subject = 'Добро пожаловать в наш сервис'
+        message = 'Спасибо, что зарегистрировались в нашем сервисе!'
+        recipient_list = [user_email]
+        send_mail(subject, message, None, recipient_list)
+
+
+class HomeView(TemplateView):
+    template_name = 'users/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['latest_product'] = Product.objects.order_by('-pk').first()
+        context['latest_post'] = Post.objects.order_by('-pk').first()
+
+        return context
+
+
+class UserLoginView(LoginView):
+    template_name = 'users/login.html'
+
+
+class UserDetailView(DetailView):
+    model = CustomUser
+    template_name = 'users/user_detail.html'
+    context_object_name = 'user'
+
+
+class UserUpdateView(FormView):
+    form_class = CustomUserChangeForm
+    template_name = 'users/user_update.html'

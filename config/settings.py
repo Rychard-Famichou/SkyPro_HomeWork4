@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
 from pathlib import Path
+
+from django.conf.global_settings import LOGIN_URL
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -55,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'users.middleware.LoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -136,13 +140,22 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 AUTH_USER_MODEL = 'users.CustomUser'
 
 # Настройки SMTP для отправки писем через Gmail
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = '://gmail.com'
-# EMAIL_PORT = 465
-# EMAIL_USE_TLS = False
-# EMAIL_USE_SSL = True
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 # Логин и созданный пароль приложения
-EMAIL_HOST_USER = 'rychard.famichou@gmail.com'
-EMAIL_HOST_PASSWORD = 'oapg szrr mfki jxty'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# URL для перенаправления если пытается открыть страницу только для пользователей
+LOGIN_URL = 'users:login'
+
+# URL для перенаправления после успешного входа
+LOGIN_REDIRECT_URL = 'users:home'
+
+# URL для перенаправления после выхода из системы
+LOGOUT_REDIRECT_URL = 'users:home'

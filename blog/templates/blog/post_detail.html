@@ -8,7 +8,13 @@
     <div class="row align-items-center">
         <div class="col-md-6 p-3 border-0">
             <h1 class="mb-4">{{ post.title }}</h1>
+            {% if post.user.username %}
+            <p><strong>Пользователь:</strong> {{ post.user.username }}</p>
+            {% elif post.user.fisrt_name and post.user.last_name %}
             <p><strong>Пользователь:</strong> {{ post.user }}</p>
+            {% else %}
+            <p><strong>Пользователь:</strong>Пользователь с почтой - {{ post.user.email }}</p>
+            {% endif %}
             <p><strong>Содержимое:</strong> {{ post.content|truncatechars:50 }}</p>
 
             <!-- Кнопка для раскрытия -->

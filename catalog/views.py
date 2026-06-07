@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, DeleteView, UpdateView, ListView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -35,7 +36,7 @@ class ProductDeleteView(ProductMixin, SuccessMessageMixin, DeleteView):
 
 
 class ProductListView(ProductMixin, ListView):
-    template_name = 'catalog/home.html'
+    template_name = 'catalog/product_list.html'
     context_object_name = 'products'
     paginate_by = 8
 

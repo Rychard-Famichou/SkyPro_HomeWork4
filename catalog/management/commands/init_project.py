@@ -1,3 +1,6 @@
+import os
+
+from django.contrib.auth import get_user_model
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import connection
@@ -51,24 +54,32 @@ class Command(BaseCommand):
         # Шаг 4: Наполнение данными (выполняется всегда, так как старые данные стерты)
         self.stdout.write(" Загрузка фикстур...")
         try:
+            call_command('loaddata', 'users_fixture.json')
             call_command("loaddata", "categories_fixture.json")
             call_command("loaddata", "products_fixture.json")
-            call_command('loaddata', 'users_fixture.json')
             call_command("loaddata", "posts_fixture.json")
             self.stdout.write(self.style.SUCCESS(" Фикстуры успешно загружены."))
         except Exception as e:
             self.stderr.write(self.style.WARNING(f" Не удалось загрузить фикстуры: {e}"))
 
-        self.stdout.write("\n Создание суперпользователя...")
-        try:
-            call_command("createsuperuser", interactive=False)
-            self.stdout.write(self.style.SUCCESS(" Суперпользователь успешно создан."))
-        except Exception as e:
-            self.stderr.write(
-                self.style.WARNING(
-                    f" Пропущено: {e}\n(Для авто-создания добавьте DJANGO_SUPERUSER_ в .env)"
-                )
-            )
+        User = get_user_model()
+        superuser_email = os.getenv("DJANGO_SUPERUSER_EMAIL", "admin@example.com")
+        superuser_username = os.getenv("DJANGO_SUPERUSER_USERNAME", "admin")
+
+        # Проверяем оба поля: и email, и username
+        user_exists = User.objects.filter(email=superuser_email).exists() or \
+                      User.objects.filter(username=superuser_username).exists()
+
+        if user_exists:
+            print("Суперпользователь уже импортирован из фикстур. Пропускаем создание.")
+        else:
+            try:
+                print("Создание суперпользователя...")
+                call_command("createsuperuser", interactive=False)
+                print("Суперпользователь успешно создан!")
+            except Exception as e:
+                print(f"Ошибка при создании: {e}")
+
         self.stdout.write("-" * 40)
 
         self.stdout.write(
