@@ -33,8 +33,12 @@
             <p><strong>Просмотры:</strong> {{ post.views }}</p>
             <div class="d-grid gap-2 col-8">
                 <a class="btn btn-primary" href="{% url 'blog:post_list' %}">Назад</a>
+                {% if perms.blog.change_post %}
                 <a class="btn btn-outline-warning" href="{% url 'blog:post_update' post.pk %}">Редактирование</a>
+                {% endif %}
+                {% if perms.blog.delete_post %}
                 <a class="btn btn-outline-danger" href="{% url 'blog:post_delete' post.pk %}">Удаление</a>
+                {% endif %}
             </div>
         </div>
         <div class="col-md-6 p-3 text-center border-0">

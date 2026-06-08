@@ -55,6 +55,7 @@ class Command(BaseCommand):
         self.stdout.write(" Загрузка фикстур...")
         try:
             call_command('loaddata', 'users_fixture.json')
+            call_command('loaddata', 'groups_fixture.json')
             call_command("loaddata", "categories_fixture.json")
             call_command("loaddata", "products_fixture.json")
             call_command("loaddata", "posts_fixture.json")

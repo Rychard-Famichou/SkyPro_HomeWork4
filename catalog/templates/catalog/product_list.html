@@ -15,7 +15,12 @@
                 </div>
                 <div class="card-body">
                     <h1 class="card-title pricing-card-title">{{ product.price }}</h1>
-                    <p>{{ product.description|truncatechars:30 }}</p>
+                    {% if user == product.owner or perms.catalog.can_unpublish_product %}
+                        {% load status_filters %}
+                        <p> {{ product.is_published|status_badge }} </p>
+                    {% else %}
+                        <p>{{ product.description|truncatechars:30 }}</p>
+                    {% endif %}
                     <a type="button" class="btn btn-lg btn-block btn-outline-primary"
                        href="{% url 'catalog:product_detail' product.pk %}">Подробнее</a>
                 </div>
