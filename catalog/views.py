@@ -1,16 +1,47 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
+from django.core.cache import cache
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import CreateView, DetailView, DeleteView, UpdateView, ListView
+from django.views.decorators.cache import cache_page
+from django.views.generic import CreateView, DetailView, DeleteView, UpdateView, ListView, TemplateView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.utils.decorators import method_decorator
 from .forms import ProductForm, ContactMessageForm
-from .models import ContactMessage, Product
+from .models import ContactMessage, Product, Category
+from .services import CatalogService
 
 
 # Create your views here.
+class CategoryMixin:
+    model = Category
+    context_object_name = 'category'
+
+
+@method_decorator(cache_page(60 * 15), name='dispatch')
+class CategoryDetailView(CategoryMixin, TemplateView):
+    template_name = 'catalog/category_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        category_id = self.request.GET.get('category_id')
+
+        if category_id:
+            try:
+                current_category = get_object_or_404(Category, pk=category_id)
+                context['current_category'] = current_category
+
+                context['products'] = CatalogService.get_category_products(category_id)
+            except Category.DoesNotExist:
+                pass
+
+        return context
+
+
 class ProductMixin:
     model = Product
     context_object_name = 'product'
@@ -46,6 +77,26 @@ class ProductUpdateView(UserPassesTestMixin, ProductFormMixin, UpdateView):
 class ProductDetailView(ProductMixin, DetailView):
     template_name = 'catalog/product_detail.html'
 
+    def get_object(self, queryset=None):
+        # 1. Получаем ID товара из URL (Django сохраняет его в self.kwargs)
+        product_id = self.kwargs.get(self.pk_url_kwarg) or self.kwargs.get('pk')
+        # 2. Формируем свое собственное понятное имя ключа!
+        cache_key = f'product_detail_{product_id}'
+        # Модераторы всегда получают свежие данные из базы (без кэша)
+        user = self.request.user
+        is_moderator = user.is_superuser or user.has_perm('catalog.can_unpublish_product')
+        if is_moderator:
+            return super().get_object(queryset)
+        # 3. Для обычных пользователей ищем в кэше
+        product = cache.get(cache_key)
+        if not product:
+            # Если в кэше нет, берем из БД и сохраняем с красивым именем
+            product = super().get_object(queryset)
+            cache.set(cache_key, product, 60 * 15)
+        if not product.is_published:
+            raise Http404("Товар не опубликован или удален")
+        return product
+
 
 class ProductDeleteView(UserPassesTestMixin, ProductMixin, SuccessMessageMixin, DeleteView):
     template_name = 'catalog/product_delete.html'
@@ -71,18 +122,26 @@ class ProductListView(ProductMixin, ListView):
     paginate_by = 8
 
     def get_queryset(self):
-        queryset = Product.objects.all().order_by('-id')
+        # 1. Кэшируем только список ID
+        product_ids = cache.get('productlist_ids')
+
+        if not product_ids:
+            # Получаем только ID из базы данных
+            product_ids = list(Product.objects.all().order_by('-id').values_list('id', flat=True))
+            cache.set('productlist_ids', product_ids, 60 * 15)
+
+        # 2. Делаем ОДИН быстрый запрос к БД по закэшированным ID
+        # Благодаря этому объекты "живые", пагинация и права работают идеально!
+        queryset = Product.objects.filter(id__in=product_ids).order_by('-id')
+
         user = self.request.user
-        # 1. Суперпользователь видит абсолютно всё
-        if user.is_superuser:
+
+        # 3. Возвращаем обычный QuerySet с фильтрацией
+        if user.is_superuser or user.has_perm('catalog.can_unpublish_product'):
             return queryset
-        # 2. Модератор КАТАЛОГА (проверяем конкретное право на изменение продуктов)
-        if user.has_perm('catalog.can_unpublish_product'):
-            return queryset
-        # 3. Авторизованный пользователь (обычный клиент / владелец товара / модератор БЛОГА)
         if user.is_authenticated:
             return queryset.filter(Q(is_published=True) | Q(owner=user))
-        # 4. Анонимный гость
+
         return queryset.filter(is_published=True)
 
 
@@ -93,6 +152,7 @@ class ProductUnpublishView(PermissionRequiredMixin, View):
         product = get_object_or_404(Product, pk=pk)
         product.is_published = False
         product.save()
+        cache.delete(f'product_detail_{product.id}')
         return redirect('catalog:product_detail', pk=product.pk)
 
 

@@ -11,6 +11,8 @@
                 {% if user.is_authenticated %}
                     {% if user.username %}
                     <p>Добро пожаловать, {{ user.username }}!</p>
+                    {% elif perms.catalog.can_unpublish_product or perms.blog.change_post %}
+                    <p>Добро пожаловать, Модератор!</p>
                     {% else %}
                     <p>Добро пожаловать, Пользователь!</p>
                     {% endif %}
