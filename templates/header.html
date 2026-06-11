@@ -3,6 +3,9 @@
     {% if header_lead %}
     <p class="lead">{{ header_lead }}</p>
     {% endif %}
+    {% if header_button_2 %}
+    <a href="{{ header_url_2 }}" class="btn btn-primary btn-lg">{{ header_button_2 }}</a>
+    {% endif %}
     {% if header_button %}
     <a href="{{ header_url }}" class="btn btn-primary btn-lg">{{ header_button }}</a>
     {% endif %}

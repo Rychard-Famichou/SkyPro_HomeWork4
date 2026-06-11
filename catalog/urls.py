@@ -15,6 +15,7 @@ urlpatterns = [
     path('product_detail/<int:pk>/edit/', views.ProductUpdateView.as_view(), name='product_update'),
     path('product_detail/<int:pk>/delete/', views.ProductDeleteView.as_view(), name='product_delete'),
     path('product_detail/<int:pk>/unpublish/', views.ProductUnpublishView.as_view(), name='product_unpublish'),
+    path('category_detail/', views.CategoryDetailView.as_view(), name='category_detail'),
 ]
 
 if settings.DEBUG:

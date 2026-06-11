@@ -4,7 +4,8 @@
 
 {% block content %}
 {% url 'catalog:product_form' as product_url %}
-{% include 'header.html' with header_title="Каталог Skystore" header_lead="Отличный вариант хранения того, что вы хотели бы продать" header_button="Добавить продукт" header_url=product_url %}
+{% url 'catalog:category_detail' as category_url %}
+{% include 'header.html' with header_title="Каталог Skystore" header_lead="Отличный вариант хранения того, что вы хотели бы продать" header_button_2="Выбрать категорию" header_url_2=category_url header_button="Добавить продукт" header_url=product_url %}
 <div class="container">
     <div class="row text-center">
         {% for product in products %}

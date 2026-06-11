@@ -15,8 +15,8 @@ class Command(BaseCommand):
         Post.objects.all().delete()
         CustomUser.objects.all().delete()
 
-        call_command('loaddata', 'users_fixture.json')
-        call_command('loaddata', 'groups_fixture.json')
+        call_command('loaddata', 'groups_fixture.json', natural_foreign=True)
+        call_command('loaddata', 'users_fixture.json', natural_foreign=True)
         call_command('loaddata', 'categories_fixture.json')
         call_command('loaddata', 'products_fixture.json')
         call_command('loaddata', 'posts_fixture.json')
